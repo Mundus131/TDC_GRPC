@@ -13,6 +13,7 @@ permissions:
   packages: write
 
 env:
+  DOCKER_BUILD_RECORD_UPLOAD: false
   REGISTRY_IMAGE: ghcr.io/mundus131/tdc_grpc
   PLATFORMS: linux/arm64/v8
 
@@ -81,3 +82,23 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           push: true
           tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+      - name: Build tar image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: ${{ env.PLATFORMS }}
+          outputs: type=docker,dest=/tmp/${{ matrix.image }}-arm64.tar
+          tags: ${{ env.REGISTRY_IMAGE }}/${{ matrix.image }}:latest-arm64
+          cache-from: type=gha,scope=${{ matrix.image }}
+
+      - name: Upload tar image
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.image }}-arm64-tar
+          path: /tmp/${{ matrix.image }}-arm64.tar
+          if-no-files-found: error
+          retention-days: 14
