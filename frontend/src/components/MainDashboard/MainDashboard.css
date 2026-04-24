@@ -1,0 +1,220 @@
+.main-dashboard-container {
+  width: 100%;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f7fa;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.main-title {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.chessboard-section {
+  margin-bottom: 30px;
+}
+
+.chessboard-section h3 {
+  font-size: 1.4rem;
+  color: #34495e;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chessboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Serial Card Styles */
+.serial-card h4, .gnss-card h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #3498db;
+}
+
+.serial-content, .gnss-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.serial-row, .gnss-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label {
+  font-weight: 500;
+  color: #7f8c8d;
+}
+
+.value {
+  color: #2c3e50;
+}
+
+/* Digital IO Styles */
+.digital-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+
+.digital-name {
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.digital-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.digital-status.high {
+  background-color: #e8f5e9;
+  color: #27ae60;
+}
+
+.digital-status.low {
+  background-color: #ffebee;
+  color: #e74c3c;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.indicator.green {
+  background-color: #2ecc71;
+}
+
+.indicator.red {
+  background-color: #e74c3c;
+}
+
+/* Analog Input Styles */
+.analog-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.analog-name {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.analog-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #3498db;
+}
+
+.unit {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+/* Temperature Styles */
+.temp-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.temp-name {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.temp-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e67e22;
+}
+
+/* IMU Styles */
+.imu-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.imu-name {
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.imu-channels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.channel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.channel-name {
+  color: #7f8c8d;
+}
+
+.channel-value {
+  font-weight: 500;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+  .chessboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .chessboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .imu-channels {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,46 @@
+.analog-inputs-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.analog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.analog-card {
+  background: #f9f9f9;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.analog-header h4 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.analog-reading {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.analog-controls label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.analog-controls select {
+  width: 150px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}

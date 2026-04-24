@@ -1,0 +1,30 @@
+services:
+  tdc-grpc-frontend:
+    image: ghcr.io/mundus131/tdc_grpc/tdc-grpc-frontend:${TDC_GRPC_TAG:-latest-arm64}
+    container_name: tdc-grpc-frontend
+    ports:
+      - "5000:80"
+    restart: unless-stopped
+    depends_on:
+      - tdc-grpc-backend
+
+  tdc-grpc-backend:
+    image: ghcr.io/mundus131/tdc_grpc/tdc-grpc-backend:${TDC_GRPC_TAG:-latest-arm64}
+    container_name: tdc-grpc-backend
+    environment:
+      PORT: "5010"
+      TDC_AUTH_LOGIN_URL: "${TDC_AUTH_LOGIN_URL:-http://192.168.0.100/auth/login}"
+      TDC_AUTH_USERNAME: "${TDC_AUTH_USERNAME:-admin}"
+      TDC_AUTH_PASSWORD: "${TDC_AUTH_PASSWORD:?Set TDC_AUTH_PASSWORD before running docker compose}"
+      TDC_AUTH_REALM: "${TDC_AUTH_REALM:-admin}"
+    restart: unless-stopped
+
+  tdc-grpc-remote-command-channel:
+    image: ghcr.io/mundus131/tdc_grpc/tdc-grpc-remote-command-channel:${TDC_GRPC_TAG:-latest-arm64}
+    container_name: tdc-grpc-remote-command-channel
+    ports:
+      - "5555:5555"
+    user: "0:0"
+    restart: unless-stopped
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"

@@ -1,0 +1,127 @@
+{
+  "digitalIO": {
+    "title": "Digitale I/O Steuerung",
+    "state": "Zustand",
+    "direction": "Richtung",
+    "input": "Eingang",
+    "output": "Ausgang",
+    "setHigh": "Setze HIGH",
+    "setLow": "Setze LOW"
+  },
+  "language": "Sprache",
+  "languages": {
+    "pl": "Polnisch",
+    "en": "Englisch",
+    "de": "Deutsch"
+  },
+  "sidebar": {
+    "main": "Hauptübersicht",
+    "digitalIO": "Digitale I/O",
+    "analogInput": "Analoge Eingänge",
+    "imu": "IMU",
+    "rs": "Serielle Kommunikation",
+    "gnss": "GNSS"
+  },
+  "digital": {
+    "title": "Konfiguration der digitalen Signale",
+    "type": "Typ",
+    "types": {
+      "input": "Eingang",
+      "output": "Ausgang",
+      "bidirectional": "Bidirektional"
+    },
+    "direction": "Richtung",
+    "directions": {
+      "in": "Eingang",
+      "out": "Ausgang"
+    },
+    "state": "Zustand",
+    "stateValues": {
+      "LOW": "Niedrig",
+      "HIGH": "Hoch",
+      "low": "Niedrig",
+      "high": "Hoch"
+    },
+    "errors": {
+      "setDirection": "Fehler beim Setzen der Richtung",
+      "setState": "Fehler beim Setzen des Zustands"
+    }
+  },
+  "analog": {
+    "title": "Analoge Eingänge",
+    "mode": "Modus",
+    "reading": "Messwert",
+    "modes": {
+      "voltage": "Spannung",
+      "current": "Strom"
+    }
+  },
+  "dashboard": {
+    "mainTitle": "Hauptgerät Dashboard",
+    "serial": {
+      "title": "Serielle Schnittstelle",
+      "mode": "Modus",
+      "baudRate": "Baudrate",
+      "slewRate": "Slew-Rate",
+      "termination": "Abschlusswiderstand",
+      "transceiverPower": "Transceiver-Stromversorgung",
+      "status": "Status",
+      "tx": "Gesendet",
+      "rx": "Empfangen"
+    },
+    "analogInputs": "Analoge Eingänge",
+    "digitalIO": "Digitale I/O",
+    "temperature": "Temperaturen",
+    "imu": "IMU",
+    "gyroscope": "Gyroskop",
+    "accelerometer": "Beschleunigungssensor",
+    "magnetometer": "Magnetometer",
+    "channel": {
+      "X": "Achse X",
+      "Y": "Achse Y",
+      "Z": "Achse Z"
+    },
+    "gnss": {
+      "title": "GNSS",
+      "overallStatus": "Gesamtstatus",
+      "status": "Empfängerstatus",
+      "receiver": "Empfänger aktiviert",
+      "antenna": "Antenne aktiviert",
+      "session": "Sitzung aktiv",
+      "reboot": "Neustart erforderlich",
+      "constellations": "Konstellationen",
+      "nmeaFrequency": "NMEA-Frequenz"
+    }
+  },
+  "serial": {
+      "title": "RS-Konfiguration",
+      "settings": "Einstellungen",
+      "mode": "Modus",
+      "termination": "Abschlusswiderstand",
+      "power": "Stromversorgung",
+      "enabled": "Ein",
+      "disabled": "Aus",
+      "baudRate": "Baudrate",
+      "dataBits": "Datenbits",
+      "stopBits": "Stoppbits",
+      "parity": "Parität",
+      "status": "Status",
+      "slewRate": "Flankensteilheit",
+      "txCount": "Gesendete Bytes",
+      "rxCount": "Empfangene Bytes",
+      "sendData": "Daten senden",
+      "enterData": "Daten zum Senden eingeben",
+      "send": "Senden",
+      "lastReceived": "Zuletzt empfangene Daten",
+      "noData": "Keine Daten",
+      "loading": "Daten werden geladen...",
+      "errorLoading": "Fehler beim Laden der Daten",
+      "errorSetMode": "Fehler beim Einstellen des Modus",
+      "errorSetTermination": "Fehler beim Einstellen des Abschlusswiderstands",
+      "errorSetPower": "Fehler beim Einstellen der Stromversorgung",
+      "errorSetConfig": "Fehler beim Einstellen der Konfiguration",
+      "errorSending": "Fehler beim Senden der Daten"
+    }
+  
+  
+}

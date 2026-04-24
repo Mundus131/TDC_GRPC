@@ -1,0 +1,121 @@
+.digital-io-container {
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+.group-title {
+  margin-top: 30px;
+  font-size: 22px;
+  color: #333;
+  border-bottom: 2px solid #444;
+  padding-bottom: 6px;
+}
+
+.device-list-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.device-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: #fafafa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.device-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.device-header h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.device-controls label {
+  font-weight: 600;
+  display: block;
+  margin: 6px 0 4px;
+}
+
+.device-controls select {
+  width: 140px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.state-controls {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
+}
+
+.state-button {
+  flex: 1;
+  padding: 8px 0;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.25s ease;
+}
+
+/* Kolory przycisków stanu LOW/HIGH */
+.state-button.low-active {
+  background-color: #f3130b; /* intensywny czerwony */
+  opacity: 1;
+}
+
+.state-button.high-active {
+  background-color: #5cb85c; /* zielony */
+  opacity: 1;
+}
+
+/* Nieaktywne przyciski są szare */
+.state-button.inactive {
+  background-color: #888888;
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* Disabled - półprzezroczysty, tylko dla wyjścia */
+.state-button:disabled:not(.no-dim) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Klasa no-dim dla wejść - brak ściemniania i pełna intensywność */
+.no-dim.low-active {
+  background-color: #f3130b; /* czerwony */
+  opacity: 1;
+  cursor: default;
+}
+
+.no-dim.high-active {
+  background-color: #5cb85c; /* zielony */
+  opacity: 1;
+  cursor: default;
+}
+
+/* Wyłączone przyciski dla wejścia w pełnym kolorze */
+.state-button:disabled.no-dim {
+  opacity: 1;
+  cursor: default;
+}
+
+.state-button.no-dim {
+  padding: 12px 0;
+  font-size: 16px;
+  min-height: 40px;
+  min-width: 100px;
+}

@@ -1,0 +1,125 @@
+{
+  "digitalIO": {
+    "title": "Sterowanie I/O cyfrowymi",
+    "state": "Stan",
+    "direction": "Kierunek",
+    "input": "Wejście",
+    "output": "Wyjście",
+    "setHigh": "Ustaw WYSOKI",
+    "setLow": "Ustaw NISKI"
+  },
+  "language": "Język",
+  "languages": {
+    "pl": "Polski",
+    "en": "Angielski",
+    "de": "Niemiecki"
+  },
+  "sidebar": {
+    "main": "Główny Panel",
+    "digitalIO": "Wej./Wyj. Cyfrowe",
+    "analogInput": "Wejścia Analogowe",
+    "imu": "IMU",
+    "rs": "Komunikacja Szeregowa",
+    "gnss": "GNSS"
+  },
+  "digital": {
+    "title": "Konfiguracja Sygnałów Cyfrowych",
+    "type": "Typ",
+    "types": {
+      "input": "Wejście",
+      "output": "Wyjście",
+      "bidirectional": "Dwukierunkowe"
+    },
+    "direction": "Kierunek",
+    "directions": {
+      "in": "Wejście",
+      "out": "Wyjście"
+    },
+    "state": "Stan",
+    "stateValues": {
+      "LOW": "Niski",
+      "HIGH": "Wysoki",
+      "low": "Niski",
+      "high": "Wysoki"
+    },
+    "errors": {
+      "setDirection": "Błąd ustawiania kierunku",
+      "setState": "Błąd ustawiania stanu"
+    }
+  },
+  "analog": {
+    "title": "Wejścia Analogowe",
+    "mode": "Tryb",
+    "reading": "Odczyt",
+    "modes": {
+      "voltage": "Napięcie",
+      "current": "Prąd"
+    }
+  },
+  "dashboard": {
+    "mainTitle": "Panel Główny Urządzenia",
+    "serial": {
+      "title": "Port Szeregowy",
+      "mode": "Tryb",
+      "baudRate": "Prędkość transmisji",
+      "slewRate": "Slew Rate",
+      "termination": "Terminacja",
+      "transceiverPower": "Zasilanie Transceivera",
+      "status": "Status",
+      "tx": "Wysłane",
+      "rx": "Odebrane"
+    },
+    "analogInputs": "Wejścia Analogowe",
+    "digitalIO": "Wej./Wyj. Cyfrowe",
+    "temperature": "Temperatury",
+    "imu": "IMU",
+    "gyroscope": "Żyroskop",
+    "accelerometer": "Akcelerometr",
+    "magnetometer": "Magnetometr",
+    "channel": {
+      "X": "Oś X",
+      "Y": "Oś Y",
+      "Z": "Oś Z"
+    },
+    "gnss": {
+      "title": "GNSS",
+      "overallStatus": "Status Ogólny",
+      "status": "Status Odbiornika",
+      "receiver": "Odbiornik aktywny",
+      "antenna": "Antena aktywna",
+      "session": "Sesja aktywna",
+      "reboot": "Wymaga restartu",
+      "constellations": "Konstelacje",
+      "nmeaFrequency": "Częstotliwość NMEA"
+    }
+  },
+  "serial": {
+      "title": "Konfiguracja RS",
+      "settings": "Ustawienia",
+      "mode": "Tryb",
+      "termination": "Terminacja",
+      "power": "Zasilanie",
+      "enabled": "Włączone",
+      "disabled": "Wyłączone",
+      "baudRate": "Prędkość transmisji (baud rate)",
+      "dataBits": "Bity danych",
+      "stopBits": "Bity stopu",
+      "parity": "Parzystość",
+      "status": "Status",
+      "slewRate": "Prędkość narastania",
+      "txCount": "Wysłane bajty",
+      "rxCount": "Odebrane bajty",
+      "sendData": "Wyślij dane",
+      "enterData": "Wpisz dane do wysłania",
+      "send": "Wyślij",
+      "lastReceived": "Ostatnio odebrane dane",
+      "noData": "Brak danych",
+      "loading": "Ładowanie danych...",
+      "errorLoading": "Błąd podczas ładowania danych",
+      "errorSetMode": "Błąd podczas ustawiania trybu",
+      "errorSetTermination": "Błąd podczas ustawiania terminacji",
+      "errorSetPower": "Błąd podczas ustawiania zasilania",
+      "errorSetConfig": "Błąd podczas ustawiania konfiguracji",
+      "errorSending": "Błąd podczas wysyłania danych"
+    }
+}

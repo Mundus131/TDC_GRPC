@@ -1,0 +1,888 @@
+openapi: 3.0.0
+info:
+  title: Devices API
+  description: API for managing serial interfaces, digital/analog I/O, temperature sensors, IMU and GNSS devices
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api
+    description: Local development server
+  - url: http://{serverIP}:5000/api
+    description: Custom server IP
+    variables:
+      serverIP:
+        default: "localhost"
+        description: IP address of the server
+tags:
+  - name: Serial Interface
+    description: Operations with serial interfaces
+  - name: Digital IO
+    description: Digital input/output operations
+  - name: Analog Input
+    description: Analog input operations
+  - name: Temperature Sensor
+    description: Temperature sensor operations
+  - name: IMU
+    description: Inertial Measurement Unit operations
+  - name: GNSS
+    description: GNSS device operations
+paths:
+  # Serial Interface Endpoints
+  /devices/serial/status:
+    get:
+      tags: [Serial Interface]
+      summary: Get serial interface status
+      responses:
+        '200':
+          description: Serial interface status
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthenticated
+        '500':
+          description: Internal server error
+
+  /devices/serial/mode:
+    get:
+      tags: [Serial Interface]
+      summary: Get current serial mode
+      responses:
+        '200':
+          description: Current serial mode
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mode:
+                    type: string
+        '500':
+          description: Internal server error
+    post:
+      tags: [Serial Interface]
+      summary: Set serial interface mode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [RS485, RS422]
+              required: [mode]
+      responses:
+        '200':
+          description: Mode set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Invalid mode
+        '500':
+          description: Internal server error
+
+  /devices/serial/termination:
+    get:
+      tags: [Serial Interface]
+      summary: Get termination status
+      responses:
+        '200':
+          description: Termination status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  termination:
+                    type: boolean
+        '500':
+          description: Internal server error
+    post:
+      tags: [Serial Interface]
+      summary: Enable/disable termination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enable:
+                  type: boolean
+              required: [enable]
+      responses:
+        '200':
+          description: Termination set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '500':
+          description: Internal server error
+
+  /devices/serial/statistics:
+    get:
+      tags: [Serial Interface]
+      summary: Get serial interface statistics
+      responses:
+        '200':
+          description: Serial statistics
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error
+
+  /devices/serial/available-modes:
+    get:
+      tags: [Serial Interface]
+      summary: Get available serial modes
+      responses:
+        '200':
+          description: List of available modes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modes:
+                    type: array
+                    items:
+                      type: string
+        '500':
+          description: Internal server error
+
+  /devices/serial/baud-rate:
+    get:
+      tags: [Serial Interface]
+      summary: Get current baud rate
+      responses:
+        '200':
+          description: Current baud rate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  baudRate:
+                    type: number
+        '500':
+          description: Internal server error
+
+  /devices/serial/slew-rate:
+    get:
+      tags: [Serial Interface]
+      summary: Get current slew rate
+      responses:
+        '200':
+          description: Current slew rate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  slewRate:
+                    type: number
+        '500':
+          description: Internal server error
+    post:
+      tags: [Serial Interface]
+      summary: Set slew rate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                slewRate:
+                  type: number
+              required: [slewRate]
+      responses:
+        '200':
+          description: Slew rate set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '500':
+          description: Internal server error
+
+  /devices/serial/power:
+    get:
+      tags: [Serial Interface]
+      summary: Get transceiver power status
+      responses:
+        '200':
+          description: Power status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  powerOn:
+                    type: boolean
+        '500':
+          description: Internal server error
+    post:
+      tags: [Serial Interface]
+      summary: Set transceiver power
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                powerOn:
+                  type: boolean
+              required: [powerOn]
+      responses:
+        '200':
+          description: Power set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '500':
+          description: Internal server error
+
+  /devices/serial/interfaces:
+    get:
+      tags: [Serial Interface]
+      summary: List available serial interfaces
+      responses:
+        '200':
+          description: List of interfaces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  interfaces:
+                    type: array
+                    items:
+                      type: string
+        '500':
+          description: Internal server error
+
+  /devices/serial/stream:
+    get:
+      tags: [Serial Interface]
+      summary: Stream serial data (SSE)
+      responses:
+        '200':
+          description: SSE stream of serial data
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Unauthenticated
+
+  /devices/serial/last:
+    get:
+      tags: [Serial Interface]
+      summary: Get last serial data
+      responses:
+        '200':
+          description: Last serial data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+        '500':
+          description: Internal server error
+
+  /devices/serial/config:
+    get:
+      tags: [Serial Interface]
+      summary: Get serial configuration
+      responses:
+        '200':
+          description: Current configuration
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error
+    post:
+      tags: [Serial Interface]
+      summary: Set serial configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Configuration saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+
+  /devices/serial/send:
+    post:
+      tags: [Serial Interface]
+      summary: Send data via serial
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: string
+              required: [data]
+      responses:
+        '200':
+          description: Data sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Missing data
+        '500':
+          description: Internal server error
+
+  /devices/serial/restart:
+    post:
+      tags: [Serial Interface]
+      summary: Restart serial port
+      responses:
+        '200':
+          description: Serial restarted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal server error
+
+  # Digital IO Endpoints
+  /devices/digital:
+    get:
+      tags: [Digital IO]
+      summary: List all digital I/O devices with their states
+      responses:
+        '200':
+          description: List of digital devices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  count:
+                    type: integer
+                  devices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        state:
+                          type: string
+                          enum: [HIGH, LOW, ERROR]
+        '500':
+          description: Internal server error
+
+  /devices/digital/direction:
+    post:
+      tags: [Digital IO]
+      summary: Set digital I/O direction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                direction:
+                  type: string
+                  enum: [IN, OUT]
+              required: [name, direction]
+      responses:
+        '200':
+          description: Direction set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          description: Invalid parameters
+        '500':
+          description: Internal server error
+
+  /devices/digital/state:
+    post:
+      tags: [Digital IO]
+      summary: Set digital I/O state
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                state:
+                  type: string
+                  enum: [HIGH, LOW]
+              required: [name, state]
+      responses:
+        '200':
+          description: State set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          description: Invalid parameters
+        '500':
+          description: Internal server error
+
+  /devices/digital/{name}:
+    get:
+      tags: [Digital IO]
+      summary: Get digital device by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Digital device details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  state:
+                    type: string
+                    enum: [HIGH, LOW, ERROR]
+        '404':
+          description: Device not found
+        '500':
+          description: Internal server error
+
+  # Analog Input Endpoints
+  /devices/analog:
+    get:
+      tags: [Analog Input]
+      summary: List all analog inputs with their readings
+      responses:
+        '200':
+          description: List of analog inputs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    reading:
+                      type: number
+        '500':
+          description: Internal server error
+
+  /devices/analog/{name}:
+    get:
+      tags: [Analog Input]
+      summary: Get analog input by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Analog input details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  value:
+                    oneOf:
+                      - type: number
+                      - type: object
+                        properties:
+                          error:
+                            type: string
+        '404':
+          description: Analog input not found
+        '500':
+          description: Internal server error
+
+  /devices/analog/{name}/mode:
+    post:
+      tags: [Analog Input]
+      summary: Set analog input measurement mode
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [voltage, current]
+              required: [mode]
+      responses:
+        '200':
+          description: Mode set successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Invalid mode
+        '500':
+          description: Internal server error
+
+  # Temperature Sensor Endpoints
+  /devices/temperature:
+    get:
+      tags: [Temperature Sensor]
+      summary: List all temperature sensors with their readings
+      responses:
+        '200':
+          description: List of temperature sensors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    reading:
+                      type: number
+        '500':
+          description: Internal server error
+
+  # IMU Endpoints
+  /devices/imu:
+    get:
+      tags: [IMU]
+      summary: List all IMU devices with their readings
+      responses:
+        '200':
+          description: List of IMU devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    channels:
+                      type: object
+        '500':
+          description: Internal server error
+
+  /devices/imu/gyroscope:
+    get:
+      tags: [IMU]
+      summary: Get gyroscope data
+      responses:
+        '200':
+          description: Gyroscope data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  channels:
+                    type: object
+        '500':
+          description: Internal server error
+
+  /devices/imu/accelerometer:
+    get:
+      tags: [IMU]
+      summary: Get accelerometer data
+      responses:
+        '200':
+          description: Accelerometer data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  channels:
+                    type: object
+        '500':
+          description: Internal server error
+
+  /devices/imu/magnetometer:
+    get:
+      tags: [IMU]
+      summary: Get magnetometer data
+      responses:
+        '200':
+          description: Magnetometer data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  channels:
+                    type: object
+        '500':
+          description: Internal server error
+
+  # GNSS Endpoints
+  /devices/gnss:
+    get:
+      tags: [GNSS]
+      summary: Get GNSS device status, constellations and NMEA frequency
+      responses:
+        '200':
+          description: GNSS device information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: object
+                  constellations:
+                    type: object
+                  nmeaFrequency:
+                    type: object
+        '500':
+          description: Internal server error
+
+  /devices/gnss/status:
+    get:
+      tags: [GNSS]
+      summary: Get GNSS device status
+      responses:
+        '200':
+          description: GNSS device status
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags: [GNSS]
+      summary: Set GNSS device status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enableReciever:
+                  type: boolean
+                enableAntenna:
+                  type: boolean
+              required: [enableReciever, enableAntenna]
+      responses:
+        '204':
+          description: Status set successfully
+        '500':
+          description: Internal server error
+
+  /devices/gnss/constellations:
+    get:
+      tags: [GNSS]
+      summary: Get GNSS constellations settings
+      responses:
+        '200':
+          description: Current constellations settings
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags: [GNSS]
+      summary: Set GNSS constellations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: Constellations set successfully
+        '500':
+          description: Internal server error
+
+  /devices/gnss/nmea/frequency:
+    get:
+      tags: [GNSS]
+      summary: Get NMEA output frequency
+      responses:
+        '200':
+          description: Current NMEA frequency
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags: [GNSS]
+      summary: Set NMEA output frequency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                frequency:
+                  type: number
+                  minimum: 0
+                  exclusiveMinimum: true
+              required: [frequency]
+      responses:
+        '204':
+          description: Frequency set successfully
+        '400':
+          description: Invalid frequency value
+        '500':
+          description: Internal server error
+
+  /devices/gnss/stream/json:
+    get:
+      tags: [GNSS]
+      summary: Stream GNSS data in JSON format (SSE)
+      responses:
+        '200':
+          description: SSE stream of GNSS data
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Unauthenticated
+
+  /devices/gnss/stream/raw:
+    get:
+      tags: [GNSS]
+      summary: Stream raw GNSS data (SSE)
+      responses:
+        '200':
+          description: SSE stream of raw GNSS data
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Unauthenticated
+
+  /devices/gnss/nmea/stream:
+    get:
+      tags: [GNSS]
+      summary: Stream NMEA sentences (SSE)
+      responses:
+        '200':
+          description: SSE stream of NMEA sentences
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        '401':
+          description: Unauthenticated
+
+  # System Endpoints
+  /status:
+    get:
+      summary: Get server status
+      responses:
+        '200':
+          description: Server status information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  websocket:
+                    type: string
+                  clients:
+                    type: number

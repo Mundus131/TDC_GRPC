@@ -1,0 +1,140 @@
+.rs-container {
+  max-width: 720px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.group-title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  color: #004466;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.device-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  background: #f9fbfc;
+  box-shadow: inset 0 0 10px #e0e7ef;
+}
+
+.device-header h4 {
+  margin: 0 0 15px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #006699;
+  border-bottom: 2px solid #006699;
+  padding-bottom: 6px;
+}
+
+.device-controls label {
+  display: inline-block;
+  width: 110px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  vertical-align: middle;
+}
+
+.device-controls select {
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-width: 120px;
+}
+
+.device-controls select:hover,
+.device-controls select:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+.state-controls > div {
+  display: inline-block;
+  margin-right: 30px;
+  vertical-align: middle;
+}
+
+.state-controls label {
+  margin-right: 8px;
+}
+
+h4 {
+  color: #004466;
+  margin-bottom: 12px;
+}
+
+input[type="text"] {
+  font-size: 1rem;
+  padding: 7px 10px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+button {
+  background-color: #0077cc;
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+button:active {
+  background-color: #004f87;
+}
+
+div[style*="color: green"] {
+  font-weight: 600;
+}
+
+div[style*="color: red"] {
+  font-weight: 600;
+}
+
+/* Styl dla sekcji z ostatnio odebranymi danymi */
+.rs-container div[style*="border: 1px solid"] {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #222;
+}
+
+/* Odstępy między elementami form */
+.device-controls > div,
+.device-controls > label {
+  margin-bottom: 12px;
+}
+
+/* Dla labeli po selectach z marginem */
+label[for="dataBits-select"],
+label[for="stopBits-select"],
+label[for="parity-select"] {
+  margin-left: 15px;
+}

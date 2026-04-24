@@ -1,0 +1,126 @@
+{
+  "digitalIO": {
+    "title": "Digital I/O Control",
+    "state": "State",
+    "direction": "Direction",
+    "input": "Input",
+    "output": "Output",
+    "setHigh": "Set HIGH",
+    "setLow": "Set LOW"
+  },
+  "language": "Language",
+   "languages": {
+      "pl": "Polish",
+      "en": "English",
+      "de": "German"
+    },
+  "sidebar": {
+    "main": "Main Dashboard",
+    "digitalIO": "Digital IO",
+    "analogInput": "Analog Input",
+    "imu": "IMU",
+    "rs": "Serial Communication",
+    "gnss": "GNSS"
+  },
+   "digital": {
+    "title": "Digital Signal Configuration",
+    "type": "Type",
+    "types": {
+      "input": "Input",
+      "output": "Output",
+      "bidirectional": "Bidirectional"
+    },
+    "direction": "Direction",
+    "directions": {
+      "in": "Input",
+      "out": "Output"
+    },
+    "state": "State",
+    "stateValues": {
+      "LOW": "Low",
+      "HIGH": "High",
+      "low": "Low",
+      "high": "High"
+    },
+    "errors": {
+      "setDirection": "Error setting direction",
+      "setState": "Error setting state"
+    }
+  },
+  "analog": {
+    "title": "Analog Inputs",
+    "mode": "Mode",
+    "reading": "Reading",
+    "modes": {
+      "voltage": "Voltage",
+      "current": "Current"
+    }
+  },
+  "dashboard": {
+    "mainTitle": "Main Device Dashboard",
+    "serial": {
+      "title": "Serial",
+      "mode": "Mode",
+      "baudRate": "Baud Rate",
+      "slewRate": "Slew Rate",
+      "termination": "Termination",
+      "transceiverPower": "Transceiver Power",
+      "status": "Status",
+      "tx": "Transmitted",
+      "rx": "Received"
+    },
+    "analogInputs": "Analog Inputs",
+    "digitalIO": "Digital I/O",
+    "temperature": "Temperatures",
+     "imu": "IMU",
+    "gyroscope": "Gyroscope",
+    "accelerometer": "Accelerometer",
+    "magnetometer": "Magnetometer",
+    "channel": {
+      "X": "Axis X",
+      "Y": "Axis Y",
+      "Z": "Axis Z"
+    },
+    "gnss": {
+      "title": "GNSS",
+      "overallStatus": "Overall Status",
+      "status": "Receiver Status",
+      "receiver": "Receiver Enabled",
+      "antenna": "Antenna Enabled",
+      "session": "Session Active",
+      "reboot": "Reboot Required",
+      "constellations": "Constellations",
+      "nmeaFrequency": "NMEA Frequency"
+    }
+  },
+  "serial": {
+      "title": "RS Configuration",
+      "settings": "Settings",
+      "mode": "Mode",
+      "termination": "Termination",
+      "power": "Power",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "baudRate": "Baud Rate",
+      "dataBits": "Data Bits",
+      "stopBits": "Stop Bits",
+      "parity": "Parity",
+      "status": "Status",
+      "slewRate": "Slew Rate",
+      "txCount": "Transmitted Bytes",
+      "rxCount": "Received Bytes",
+      "sendData": "Send Data",
+      "enterData": "Enter data to send",
+      "send": "Send",
+      "lastReceived": "Last Received Data",
+      "noData": "No data",
+      "loading": "Loading data...",
+      "errorLoading": "Error loading data",
+      "errorSetMode": "Error setting mode",
+      "errorSetTermination": "Error setting termination",
+      "errorSetPower": "Error setting power",
+      "errorSetConfig": "Error setting configuration",
+      "errorSending": "Error sending data"
+    }
+
+}

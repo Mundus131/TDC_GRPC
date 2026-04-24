@@ -1,0 +1,9 @@
+node_modules/
+build/
+dist/
+.env
+.env.*
+*.log
+private_key.pem
+grpc-clicker.json
+backend/resources/scripts/token.json

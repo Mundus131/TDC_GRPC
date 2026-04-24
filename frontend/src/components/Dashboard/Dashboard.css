@@ -1,0 +1,21 @@
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f7f9fb;
+}
+
+.dashboard-main-content {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 250px; /* Dostosuj do szerokości Sidebara */
+  overflow-y: auto;
+  height: 100vh;
+}
+
+/* Responsywność - dla mniejszych ekranów */
+@media (max-width: 768px) {
+  .dashboard-main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
