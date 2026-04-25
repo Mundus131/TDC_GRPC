@@ -1,104 +1,274 @@
-name: Build ARM64 Docker Images
+name: CD
 
 on:
   push:
     branches:
       - main
-    tags:
-      - '*'
   workflow_dispatch:
+    inputs:
+      publish_backend:
+        description: "Build and publish backend image"
+        required: false
+        default: true
+        type: boolean
+      publish_frontend:
+        description: "Build and publish frontend image"
+        required: false
+        default: true
+        type: boolean
+      publish_remote_channel:
+        description: "Build and publish remote command channel image"
+        required: false
+        default: true
+        type: boolean
+      export_tars:
+        description: "Export TAR archives from GHCR images"
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
   packages: write
 
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
-  DOCKER_BUILD_RECORD_UPLOAD: false
-  REGISTRY_IMAGE: ghcr.io/mundus131/tdc_grpc
-  PLATFORMS: linux/arm64/v8
+  REGISTRY: ghcr.io
 
 jobs:
-  build:
-    name: Build ${{ matrix.image }}
+  detect-changes:
+    name: Detect Changed Services
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - image: tdc-grpc-backend
-            context: backend
-            dockerfile: backend/Dockerfile
-          - image: tdc-grpc-frontend
-            context: frontend
-            dockerfile: frontend/Dockerfile
-          - image: tdc-grpc-remote-command-channel
-            context: remoteCommandChannel
-            dockerfile: remoteCommandChannel/Dockerfile
-
+    outputs:
+      backend: ${{ github.event_name == 'push' && steps.filter.outputs.backend || steps.manual.outputs.backend }}
+      frontend: ${{ github.event_name == 'push' && steps.filter.outputs.frontend || steps.manual.outputs.frontend }}
+      remote_channel: ${{ github.event_name == 'push' && steps.filter.outputs.remote_channel || steps.manual.outputs.remote_channel }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Detect changes on push
+        if: ${{ github.event_name == 'push' }}
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - '.github/workflows/docker-images.yml'
+            frontend:
+              - 'frontend/**'
+              - '.github/workflows/docker-images.yml'
+            remote_channel:
+              - 'remoteCommandChannel/**'
+              - '.github/workflows/docker-images.yml'
+
+      - name: Set manual service selection
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        id: manual
+        run: |
+          echo "backend=${{ inputs.publish_backend }}" >> $GITHUB_OUTPUT
+          echo "frontend=${{ inputs.publish_frontend }}" >> $GITHUB_OUTPUT
+          echo "remote_channel=${{ inputs.publish_remote_channel }}" >> $GITHUB_OUTPUT
+
+  publish-backend:
+    name: Publish Backend Image
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image name
+        shell: bash
+        run: |
+          OWNER_LC="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          echo "IMAGE_NAME=${{ env.REGISTRY }}/${OWNER_LC}/tdc_grpc/tdc-grpc-backend" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
 
-      - name: Set up Docker Buildx
+      - name: Setup Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare tags
-        id: tags
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  publish-frontend:
+    name: Publish Frontend Image
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image name
         shell: bash
         run: |
-          set -eu
-          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            VERSION="${GITHUB_REF_NAME}"
-          else
-            VERSION="${GITHUB_REF_NAME//\//-}"
-          fi
+          OWNER_LC="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          echo "IMAGE_NAME=${{ env.REGISTRY }}/${OWNER_LC}/tdc_grpc/tdc-grpc-frontend" >> "$GITHUB_ENV"
 
-          TAGS="${REGISTRY_IMAGE}/${{ matrix.image }}:${VERSION}-arm64"
-          TAGS="${TAGS},${REGISTRY_IMAGE}/${{ matrix.image }}:${GITHUB_SHA::7}-arm64"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
-          if [ "${GITHUB_REF_NAME}" = "main" ]; then
-            TAGS="${TAGS},${REGISTRY_IMAGE}/${{ matrix.image }}:latest-arm64"
-          fi
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v3
 
-          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push frontend image
         uses: docker/build-push-action@v6
         with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.dockerfile }}
-          platforms: ${{ env.PLATFORMS }}
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.tags.outputs.tags }}
-          cache-from: type=gha,scope=${{ matrix.image }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build tar image
+  publish-remote-channel:
+    name: Publish Remote Command Channel Image
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.remote_channel == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image name
+        shell: bash
+        run: |
+          OWNER_LC="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          echo "IMAGE_NAME=${{ env.REGISTRY }}/${OWNER_LC}/tdc_grpc/tdc-grpc-remote-command-channel" >> "$GITHUB_ENV"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push remote command channel image
         uses: docker/build-push-action@v6
         with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.dockerfile }}
-          platforms: ${{ env.PLATFORMS }}
-          outputs: type=docker,dest=/tmp/${{ matrix.image }}-arm64.tar
-          tags: ${{ env.REGISTRY_IMAGE }}/${{ matrix.image }}:latest-arm64
-          cache-from: type=gha,scope=${{ matrix.image }}
+          context: ./remoteCommandChannel
+          file: ./remoteCommandChannel/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Upload tar image
+  export-tar-archives:
+    name: Export TDC_GRPC TAR Archives
+    needs:
+      - detect-changes
+      - publish-backend
+      - publish-frontend
+      - publish-remote-channel
+    if: ${{ always() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.export_tars)) && (needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true' || needs.detect-changes.outputs.remote_channel == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Export tar archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          OWNER_LC="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          SHA_TAG="sha-${GITHUB_SHA::7}"
+
+          SERVICES=()
+          if [[ "${{ needs.detect-changes.outputs.backend }}" == "true" ]]; then
+            SERVICES+=("backend")
+          fi
+          if [[ "${{ needs.detect-changes.outputs.frontend }}" == "true" ]]; then
+            SERVICES+=("frontend")
+          fi
+          if [[ "${{ needs.detect-changes.outputs.remote_channel }}" == "true" ]]; then
+            SERVICES+=("remote-command-channel")
+          fi
+
+          for service in "${SERVICES[@]}"; do
+            IMAGE="ghcr.io/${OWNER_LC}/tdc_grpc/tdc-grpc-${service}:${SHA_TAG}"
+            TAR_NAME="tdc-grpc-${service}-${SHA_TAG}.tar"
+            echo "Pulling ${IMAGE}"
+            docker pull "${IMAGE}"
+            echo "Saving ${TAR_NAME}.gz"
+            docker save "${IMAGE}" | gzip > "dist/${TAR_NAME}.gz"
+          done
+
+      - name: Upload tar artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.image }}-arm64-tar
-          path: /tmp/${{ matrix.image }}-arm64.tar
+          name: tdc-grpc-image-tars-${{ github.sha }}
+          path: dist/*.tar.gz
           if-no-files-found: error
-          retention-days: 14
