@@ -33,7 +33,7 @@ permissions:
 
 concurrency:
   group: cd-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   REGISTRY: ghcr.io
@@ -228,7 +228,7 @@ jobs:
       - publish-backend
       - publish-frontend
       - publish-remote-channel
-    if: ${{ always() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.export_tars)) && (needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true' || needs.detect-changes.outputs.remote_channel == 'true') }}
+    if: ${{ always() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.export_tars)) && (needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true' || needs.detect-changes.outputs.remote_channel == 'true') && (needs.publish-backend.result == 'success' || needs.publish-frontend.result == 'success' || needs.publish-remote-channel.result == 'success') }}
     runs-on: ubuntu-latest
     steps:
       - name: Login to GHCR
@@ -247,14 +247,19 @@ jobs:
           SHA_TAG="sha-${GITHUB_SHA::7}"
 
           SERVICES=()
-          if [[ "${{ needs.detect-changes.outputs.backend }}" == "true" ]]; then
+          if [[ "${{ needs.detect-changes.outputs.backend }}" == "true" && "${{ needs.publish-backend.result }}" == "success" ]]; then
             SERVICES+=("backend")
           fi
-          if [[ "${{ needs.detect-changes.outputs.frontend }}" == "true" ]]; then
+          if [[ "${{ needs.detect-changes.outputs.frontend }}" == "true" && "${{ needs.publish-frontend.result }}" == "success" ]]; then
             SERVICES+=("frontend")
           fi
-          if [[ "${{ needs.detect-changes.outputs.remote_channel }}" == "true" ]]; then
+          if [[ "${{ needs.detect-changes.outputs.remote_channel }}" == "true" && "${{ needs.publish-remote-channel.result }}" == "success" ]]; then
             SERVICES+=("remote-command-channel")
+          fi
+
+          if [[ ${#SERVICES[@]} -eq 0 ]]; then
+            echo "No successfully published images to export, skipping TAR generation."
+            exit 0
           fi
 
           for service in "${SERVICES[@]}"; do
